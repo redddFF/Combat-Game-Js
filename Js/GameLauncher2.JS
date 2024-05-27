@@ -232,6 +232,31 @@ function hidePopup() {
     document.getElementById('overlay').style.display = 'none';
 }
 
+
+
+function createPlateau(BlueCastle, RedCastle) {
+    plateau = new Plateau();
+    plateau.instantiateCarreaux(5);
+    fillPlateau(BlueCastle, plateau);
+    fillPlateauRed(RedCastle, plateau);
+    displayWarriors(plateau);
+    console.log(plateau);
+}
+
+
+
+
+
+
+
+function fightingProcess(plateau){
+   
+    moveGuerriersBleus(plateau);
+    moveGuerriersRouges(plateau);
+   
+}
+
+
 function displayWarriors(plateau) {
     plateau.carreaux.forEach((carreau, index) => {
         const section = document.getElementById(`section${index}`);
@@ -277,29 +302,6 @@ function displayWarriors(plateau) {
 
         section.innerHTML = content;
     });
-}
-
-function createPlateau(BlueCastle, RedCastle) {
-    plateau = new Plateau();
-    plateau.instantiateCarreaux(5);
-    fillPlateau(BlueCastle, plateau);
-    fillPlateauRed(RedCastle, plateau);
-    
-    displayWarriors(plateau);
-    console.log(plateau);
-}
-
-
-
-
-
-
-
-function fightingProcess(plateau){
-   
-    moveGuerriersBleus(plateau);
-    moveGuerriersRouges(plateau);
-   
 }
 
 function moveGuerriersBleus(plateau) {
