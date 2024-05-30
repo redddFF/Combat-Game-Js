@@ -1,0 +1,52 @@
+
+let BlueCastle;
+let RedCastle;
+
+function showPopup() {
+    document.getElementById('overlay').style.display = 'flex';
+}
+function displayModes(BlueCastle) {
+    var popupContent = document.querySelector('.popup');
+    popupContent.innerHTML = `
+        <h2>Select Game Mode</h2>
+        <p>Resources: ${BlueCastle.ressources}</p>
+        <button onclick="exitGame()">Exit</button>
+        <button onclick="startTraining(BlueCastle)">Training</button>
+        <button onclick="startRandom()">Start Random</button>
+    `;
+}
+
+function startGame() {
+    BlueCastle = new Chateau('blue');
+    RedCastle = new Chateau('red');
+    RedCastle.instantiateWarriors();
+    BlueCastle.instantiateWarriors();
+    console.log(BlueCastle)
+    console.log(RedCastle)
+    displayModes(BlueCastle);
+}
+
+
+function startTraining(BlueCastle){
+
+    console.log(BlueCastle.ressources)
+}
+
+
+
+
+
+function exitGame() {
+    console.log('Game exited!');
+}
+
+
+
+function startRandom() {
+    console.log('Random mode started!');
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    showPopup();
+});
