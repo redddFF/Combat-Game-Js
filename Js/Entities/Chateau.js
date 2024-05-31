@@ -2,7 +2,7 @@ class Chateau {
     
     constructor(color) {
         this.guerriers = [];
-        this.ressources = 20;
+        this.ressources = 3;
         this.fileAttente = [];
         this.color=color;
     }

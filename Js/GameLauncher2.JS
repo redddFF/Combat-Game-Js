@@ -1,7 +1,17 @@
 let BlueCastle;
 let RedCastle;
 let plateau;
-
+let tour = 1;
+function showPopupMessage(message) {
+    showPopup()
+    var popupContent = document.querySelector('.popup');
+    popupContent.innerHTML = `
+        <h2>${message}</h2>
+    `;
+}
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 function showPopup() {
     document.getElementById('overlay').style.display = 'flex';
 }
@@ -145,60 +155,62 @@ function submitTraining(BlueCastle, RedCastle) {
 }
 
 
-function startFight(BlueCastle, RedCastle) {
+async function startFight(BlueCastle, RedCastle) {
     showPopupMessage("The game started. Round 1");
-    setTimeout(function() {
+    setTimeout(function () {
         hidePopup();
-        
-    }, 2000); 
-    
-    createPlateau(BlueCastle, RedCastle);
+        createPlateau(BlueCastle, RedCastle);
+    }, 1000);
 }
-
-function fillPlateau(BlueCastle, plateau) {
+async function fillPlateau(BlueCastle, plateau) {
     // Determine the last index of carreaux
     const lastCarreauIndex = plateau.carreaux.length - 1;
 
     while (BlueCastle.ressources > 0 && BlueCastle.fileAttente.length > 0 && BlueCastle.ressources >= BlueCastle.fileAttente[0].cout) {
         const nextWarrior = BlueCastle.fileAttente[0];
-        
+
         BlueCastle.ressources -= nextWarrior.cout;
         BlueCastle.guerriers.push(nextWarrior);
-        plateau.carreaux[lastCarreauIndex].guerriersBleu.push(nextWarrior); 
+        plateau.carreaux[lastCarreauIndex].guerriersBleu.push(nextWarrior);
         console.log('****Current state of BLUEEEE****', plateau)
-        BlueCastle.fileAttente.shift(); 
+        BlueCastle.fileAttente.shift();
 
         console.log(`Trained ${nextWarrior.constructor.name}`);
         console.log(`Resources remaining: ${BlueCastle.ressources}`);
         console.log('Current warriors on the plateau of blue:', plateau.carreaux[lastCarreauIndex].guerriersBleu);
+
+
     }
     if (BlueCastle.ressources <= 0) {
         console.log('Not enough resources to train the next warrior');
     } else if (BlueCastle.fileAttente.length === 0) {
         console.log('No warriors in the queue');
     }
+    await delay(2000);
 }
 
 
-function fillPlateauRed(RedCastle, plateau) {
+async function fillPlateauRed(RedCastle, plateau) {
     while (RedCastle.ressources > 0 && RedCastle.fileAttente.length > 0 && RedCastle.ressources >= RedCastle.fileAttente[0].cout) {
         const nextWarrior = RedCastle.fileAttente[0];
-        
+
         RedCastle.ressources -= nextWarrior.cout;
         RedCastle.guerriers.push(nextWarrior);
-        plateau.carreaux[0].guerriersRouge.push(nextWarrior); 
-        RedCastle.fileAttente.shift(); 
+        plateau.carreaux[0].guerriersRouge.push(nextWarrior);
+        RedCastle.fileAttente.shift();
 
         console.log(`Trained ${nextWarrior.constructor.name}`);
         console.log(`Resources remaining: ${RedCastle.ressources}`);
         console.log('Current warriors on the plateau of red:', plateau.carreaux[0].guerriersRouge);
+
     }
     if (RedCastle.ressources <= 0) {
         console.log('Not enough resources to train the next warrior');
     } else {
         console.log('No warriors in the queue');
     }
-    fightingProcess(plateau);
+    await delay(2000);
+
 }
 
 function addWarriorToQueue(type, BlueCastle) {
@@ -249,35 +261,126 @@ function displayFileAttente(BlueCastle, RedCastle) {
 }
 
 
-function createPlateau(BlueCastle, RedCastle) {
+async function createPlateau(BlueCastle, RedCastle) {
     plateau = new Plateau();
     plateau.instantiateCarreaux(5);
-    fillPlateau(BlueCastle, plateau);
-    fillPlateauRed(RedCastle, plateau);
-    setTimeout(function() {
-        displayWarriors(plateau);
+    await fillPlateau(BlueCastle, plateau);
+    await fillPlateauRed(RedCastle, plateau);
+
+    setTimeout(function () {
+        startBattle(plateau);
+        
         console.log(plateau);
-    }, 2000); 
-}
-function showPopupMessage(message) {
-    var popupContent = document.querySelector('.popup');
-    popupContent.innerHTML = `
-        <h2>${message}</h2>
-    `;
-}
-function fightingProcess(plateau){
-   
-  //  moveGuerriersBleus(plateau);
-  //  moveGuerriersRouges(plateau);
-   
+    }, 2000);
+    displayWarriors(plateau);
 }
 
+
+
+function isBattleTriggered() {
+    return plateau.carreaux.some(carreau => carreau.guerriersBleu.length > 0 && carreau.guerriersRouge.length > 0);
+}
+
+async function startBattle(plateau) {
+   
+    let battleCarreau;
+
+
+    while (!isBattleTriggered()) {
+        moveGuerriersBleus(plateau);
+        moveGuerriersRouges(plateau);
+        displayWarriors(plateau);
+        await delay(3000);
+    }
+
+    for (const carreau of plateau.carreaux) {
+        if (carreau.guerriersBleu.length > 0 && carreau.guerriersRouge.length > 0) {
+            battleCarreau = carreau;
+            break;
+        }
+    }
+
+
+    while (true) {
+        console.log(`Round ${tour}`);
+        battleRound(battleCarreau, tour, plateau);
+        displayWarriors(plateau);
+        await delay(3000);
+
+
+        const winner = checkWinner(battleCarreau);
+        if (winner) {
+            console.log(`${winner} wins the battle!`);
+            break;
+        }
+
+        tour++;
+      
+
+    }
+
+
+    while (!isEndOfPlateauMovement(plateau)) {
+        moveGuerriersBleus(plateau);
+        moveGuerriersRouges(plateau);
+        displayWarriors(plateau);
+        await delay(3000);
+    }
+
+    console.log("Battle and movement completed!");
+}
+function checkWinner(carreau) {
+    if (carreau.guerriersBleu.length === 0) {
+   
+        return "Red";
+    } else if (carreau.guerriersRouge.length === 0) {
+     
+        return "Blue";
+    } else {
+        return null;
+    }
+}
+
+async function battleRound(carreau, tour) {
+    console.log(`Fight happening in round ${tour}`);
+
+
+    for (const guerrier of carreau.guerriersRouge) {
+        if (carreau.guerriersBleu.length > 0) {
+            console.log(`Le guerrier rouge ${guerrier.type} attaque !`);
+            guerrier.attack(carreau.guerriersBleu);
+            await delay(3000);
+
+        }
+    }
+    
+    for (const guerrier of carreau.guerriersBleu) {
+        if (carreau.guerriersRouge.length > 0) {
+            console.log(`Le guerrier bleu ${guerrier.type} attaque !`);
+            guerrier.attack(carreau.guerriersRouge);
+            await delay(3000);
+            displayWarriors(plateau)
+        }
+    }
+    
+}
+
+
+function isEndOfPlateauMovement(plateau) {
+    const firstCarreau = plateau.carreaux[0];
+    const lastCarreau = plateau.carreaux[plateau.carreaux.length - 1];
+
+    const noBlueInFirstCarreau = firstCarreau.guerriersBleu.length === 0;
+    const noRedInLastCarreau = lastCarreau.guerriersRouge.length === 0;
+
+    return noBlueInFirstCarreau && noRedInLastCarreau;
+}
 
 function displayWarriors(plateau) {
     plateau.carreaux.forEach((carreau, index) => {
         const section = document.getElementById(`section${index}`);
         let content = '';
-        
+
         carreau.guerriersBleu.forEach(warrior => {
             switch (warrior.type) {
                 case 'nain':
@@ -330,31 +433,40 @@ function moveGuerriersBleus(plateau) {
             previousCarreau.guerriersBleu.push(...currentCarreau.guerriersBleu);
             currentCarreau.guerriersBleu = [];
 
+            // If there are red warriors in the previous carreau, trigger battle
+            if (previousCarreau.guerriersRouge.length > 0) {
+                battleRound(previousCarreau);
+            }
+
             console.log(`Moved guerriers bleus from carreau ${i} to carreau ${i - 1}`);
             break; // Exit the loop after moving warriors
         }
     }
-
-    console.log('State after moving guerriers bleus:', JSON.stringify(plateau, null, 2));
 }
 
 function moveGuerriersRouges(plateau) {
+
     for (let i = 0; i < plateau.carreaux.length - 1; i++) {
         if (plateau.carreaux[i].guerriersRouge.length > 0) {
             const currentCarreau = plateau.carreaux[i];
             const nextCarreau = plateau.carreaux[i + 1];
 
-            // Move all guerriers rouges from the current carreau to the next one
+
             nextCarreau.guerriersRouge.push(...currentCarreau.guerriersRouge);
             currentCarreau.guerriersRouge = [];
 
-            console.log(`Moved guerriers rouges from carreau ${i} to carreau ${i + 1}`);
-            break; // Exit the loop after moving warriors
-        }
-    }
+            if (nextCarreau.guerriersBleu.length > 0) {
+                battleRound(nextCarreau);
+            }
 
-    console.log('State after moving guerriers rouges:', JSON.stringify(plateau, null, 2));
+            console.log(`Moved guerriers rouges from carreau ${i} to carreau ${i + 1}`);
+            break;
+        }
 }
+
+   
+}
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
