@@ -25,7 +25,9 @@ ul {
     border-radius: 5px;             /* Optional: rounded corners */
     min-width: 200px;               /* Minimum width for each form container */
 }
-
+p{
+    text-align: center;
+}
 /* Adjust labels to be exactly under each other with same dimensions */
 .castle-form label {
     display: block;            /* Make labels block-level elements */

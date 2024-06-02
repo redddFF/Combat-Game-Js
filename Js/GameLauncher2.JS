@@ -177,6 +177,7 @@ function submitTraining(BlueCastle, RedCastle) {
 
 
 async function startFight(BlueCastle, RedCastle) {
+    
     showPopupMessage("The game started. Round 1");
     setTimeout(function () {
         hidePopup();
@@ -199,8 +200,9 @@ async function fillPlateau(BlueCastle, plateau) {
         console.log(`Trained ${nextWarrior.constructor.name}`);
         console.log(`Resources remaining: ${BlueCastle.ressources}`);
         console.log('Current warriors on the plateau of blue:', plateau.carreaux[lastCarreauIndex].guerriersBleu);
-
-
+       
+        displayWarriors(plateau)
+        await delay(2000);
     }
     if (BlueCastle.ressources <= 0) {
         console.log('Not enough resources to train the next warrior');
@@ -223,13 +225,15 @@ async function fillPlateauRed(RedCastle, plateau) {
         console.log(`Trained ${nextWarrior.constructor.name}`);
         console.log(`Resources remaining: ${RedCastle.ressources}`);
         console.log('Current warriors on the plateau of red:', plateau.carreaux[0].guerriersRouge);
-
+        displayWarriors(plateau)
+        await delay(2000);
     }
     if (RedCastle.ressources <= 0) {
         console.log('Not enough resources to train the next warrior');
     } else {
         console.log('No warriors in the queue');
     }
+       
     await delay(2000);
 
 }
@@ -348,12 +352,17 @@ async function createPlateau(BlueCastle, RedCastle) {
     plateau.instantiateCarreaux(5);
     await fillPlateau(BlueCastle, plateau);
     await fillPlateauRed(RedCastle, plateau);
+    setTimeout(function () {
+        displayWarriors(plateau)
+     }, 3000);
     displayCastleWarriors(BlueCastle, RedCastle)
     setTimeout(function () {
         startBattle(plateau);
         
         console.log(plateau);
     }, 2000);
+    moveGuerriersBleus(plateau);
+    moveGuerriersRouges(plateau);
     displayWarriors(plateau);
 }
 
@@ -396,6 +405,7 @@ async function startBattle(plateau) {
         const winner = checkWinner(battleCarreau);
         if (winner) {
             console.log(`${winner} wins the battle!`);
+           
             break;
         }
 
@@ -405,13 +415,13 @@ async function startBattle(plateau) {
     }
 
 
-    while (!isEndOfPlateauMovement(plateau)) {
+   
         moveGuerriersBleus(plateau);
         moveGuerriersRouges(plateau);
         displayWarriors(plateau);
         await delay(3000);
-    }
-
+  
+   
     console.log("Battle and movement completed!");
 }
 function checkWinner(carreau) {
@@ -447,6 +457,8 @@ async function battleRound(carreau, tour) {
             displayWarriors(plateau)
         }
     }
+    BlueCastle.ressources++
+    RedCastle.ressources++
     
 }
 
@@ -584,7 +596,7 @@ function retry() {
 
 
 function displayCastleWarriors(BlueCastle, RedCastle) {
-    // Get the div elements for displaying warriors
+    // Get the div elements for displaying warriors, file attente, and resources
     const blueCastleDiv = document.getElementById('castle-blue');
     const redCastleDiv = document.getElementById('castle-red');
 
@@ -596,24 +608,40 @@ function displayCastleWarriors(BlueCastle, RedCastle) {
     let blueContent = '<h3>Blue Castle Warriors</h3>';
     BlueCastle.guerriers.forEach(warrior => {
         blueContent += `<div class="warrior-cadre">
-            <p>Type: ${warrior.type}</p>
-            <p>Force: ${warrior.force}</p>
-            <p>Points de Vie: ${warrior.pointsDeVie}</p>
+            <p>Warrior: ${warrior.type} | Force: ${warrior.force} | Points de Vie: ${warrior.pointsDeVie}</p>
         </div>`;
     });
+    blueContent += '<h3>Blue Castle File Attente</h3>';
+    BlueCastle.fileAttente.forEach(warrior => {
+        blueContent += `<div class="warrior-cadre">
+            <p>Warrior: ${warrior.type} | Force: ${warrior.force} | Points de Vie: ${warrior.pointsDeVie}</p>
+        </div>`;
+    });
+    blueContent += `<h3>Blue Castle Resources</h3>
+        <p>Gold: ${BlueCastle.ressources}</p>
+
+     `;
     blueCastleDiv.innerHTML = blueContent;
 
     // Display RedCastle warriors
     let redContent = '<h3>Red Castle Warriors</h3>';
     RedCastle.guerriers.forEach(warrior => {
         redContent += `<div class="warrior-cadre">
-            <p>Type: ${warrior.type}</p>
-            <p>Force: ${warrior.force}</p>
-            <p>Points de Vie: ${warrior.pointsDeVie}</p>
+            <p>Type: ${warrior.type} | Force: ${warrior.force} | Points de Vie: ${warrior.pointsDeVie}</p>
         </div>`;
     });
+    redContent += '<h3>Red Castle File Attente</h3>';
+    RedCastle.fileAttente.forEach(warrior => {
+        redContent += `<div class="warrior-cadre">
+            <p>Type: ${warrior.type} | Force: ${warrior.force} | Points de Vie: ${warrior.pointsDeVie}</p>
+        </div>`;
+    });
+    redContent += `<h3>Red Castle Resources</h3>
+        <p>Gold: ${RedCastle.ressources}</p>
+`;
     redCastleDiv.innerHTML = redContent;
 }
+
 
 function displayRetryExitButtons() {
     var popupContent = document.querySelector('.popup');
@@ -623,6 +651,10 @@ function displayRetryExitButtons() {
     `;
     popupContent.innerHTML = content;
 }
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
     showPopup();
