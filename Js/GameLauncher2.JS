@@ -2,6 +2,8 @@ let BlueCastle;
 let RedCastle;
 let plateau;
 let tour = 1;
+
+
 function showPopupMessage(message) {
     showPopup()
     var popupContent = document.querySelector('.popup');
@@ -24,12 +26,16 @@ function displayModes(BlueCastle, RedCastle) {
     var popupContent = document.querySelector('.popup');
     popupContent.innerHTML = `
         <h2>Select Game Mode</h2>
-        <p>Resources: ${BlueCastle.ressources}</p>
-        <button onclick="exitGame()">Exit</button>
-        <button onclick="modeTrainingPOPUP(BlueCastle, RedCastle)">Training</button>
-        <button onclick="startRandom()">Start Random</button>
+    
+        <div class="button-container">
+       
+            <button onclick="modeTrainingPOPUP(BlueCastle, RedCastle)">Training</button>
+            <button onclick="startRandom()">Start Random</button>
+            <button class="buttonGB" onclick="exitGame()">Exit</button>
+        </div>
     `;
 }
+
 
 function startGame() {
     BlueCastle = new Chateau('blue');
@@ -38,94 +44,109 @@ function startGame() {
 }
 
 function exitGame() {
-    console.log('Game exited!');
+    if (confirm('Are you sure you want to exit the game?')) {
+        window.close();
+    }
 }
+
 
 function startRandom() {
     console.log('Random mode started!');
 }
 
 function modeTrainingPOPUP(BlueCastle, RedCastle) {
+    BlueCastle.fileAttente = [];
+    RedCastle.fileAttente = [];
     var popupContent = document.querySelector('.popup');
     popupContent.innerHTML = `
-        <h2>Select Warrior Type to Train</h2>
+        <h2>SELECT WORRIER TYPE TO TRAIN </h2>
+        <p><strong>Nain:</strong> <span style="border: 1px solid black; padding: 2px;">1 point</span>    <strong>Chef nain:</strong> <span style="border: 1px solid black; padding: 2px;">2 points</span>    <strong>Elfe:</strong> <span style="border: 1px solid black; padding: 2px;">3 points</span>    <strong>Chef Elfe:</strong> <span style="border: 1px solid black; padding: 2px;">4 points</span></p>
 
-        <h3>BlueCastle</h3>
-        <p>Resources: ${BlueCastle.ressources}</p>
-        <form id="trainingFormBlue">
-            <label for="blueFighter1">First Fighter:</label>
-            <select id="blueFighter1">
-                <option value="nain">Nain</option>
-                <option value="chefNain">Chef Nain</option>
-                <option value="elfe">Elfe</option>
-                <option value="chefElfe">Chef Elfe</option>
-            </select><br><br>
+        <div class="castle-forms">
+            <div class="castle-form">
+                <h3>Blue Castle</h3>
+                <p>Resources: ${BlueCastle.ressources}</p>
+                <form id="trainingFormBlue">
+                    <label for="blueFighter1">First Fighter:</label>
+                    <select id="blueFighter1">
+                        <option value="nain">Nain</option>
+                        <option value="chefNain">Chef Nain</option>
+                        <option value="elfe">Elfe</option>
+                  
+                    </select><br><br>
 
-            <label for="blueFighter2">Second Fighter:</label>
-            <select id="blueFighter2">
-                <option value="nain">Nain</option>
-                <option value="chefNain">Chef Nain</option>
-                <option value="elfe">Elfe</option>
-                <option value="chefElfe">Chef Elfe</option>
-            </select><br><br>
+                    <label for="blueFighter2">Second Fighter:</label>
+                    <select id="blueFighter2">
+                        <option value="nain">Nain</option>
+                        <option value="chefNain">Chef Nain</option>
+                        <option value="elfe">Elfe</option>
+                        <option value="chefElfe">Chef Elfe</option>
+                    </select><br><br>
 
-            <label for="blueFighter3">Third Fighter:</label>
-            <select id="blueFighter3">
-                <option value="nain">Nain</option>
-                <option value="chefNain">Chef Nain</option>
-                <option value="elfe">Elfe</option>
-                <option value="chefElfe">Chef Elfe</option>
-            </select><br><br>
+                    <label for="blueFighter3">Third Fighter:</label>
+                    <select id="blueFighter3">
+                        <option value="nain">Nain</option>
+                        <option value="chefNain">Chef Nain</option>
+                        <option value="elfe">Elfe</option>
+                        <option value="chefElfe">Chef Elfe</option>
+                    </select><br><br>
 
-            <label for="blueFighter4">Fourth Fighter:</label>
-            <select id="blueFighter4">
-                <option value="nain">Nain</option>
-                <option value="chefNain">Chef Nain</option>
-                <option value="elfe">Elfe</option>
-                <option value="chefElfe">Chef Elfe</option>
-            </select><br><br>
-        </form>
+                    <label for="blueFighter4">Fourth Fighter:</label>
+                    <select id="blueFighter4">
+                        <option value="nain">Nain</option>
+                        <option value="chefNain">Chef Nain</option>
+                        <option value="elfe">Elfe</option>
+                        <option value="chefElfe">Chef Elfe</option>
+                    </select><br><br>
+                </form>
+            </div>
 
-        <h3>RedCastle</h3>
-        <p>Resources: ${RedCastle.ressources}</p>
-        <form id="trainingFormRed">
-            <label for="redFighter1">First Fighter:</label>
-            <select id="redFighter1">
-                <option value="nain">Nain</option>
-                <option value="chefNain">Chef Nain</option>
-                <option value="elfe">Elfe</option>
-                <option value="chefElfe">Chef Elfe</option>
-            </select><br><br>
+            <div class="castle-form">
+                <h3>Red Castle</h3>
+                <p>Resources: ${RedCastle.ressources}</p>
+                <form id="trainingFormRed">
+                    <label for="redFighter1">First Fighter:</label>
+                    <select id="redFighter1">
+                        <option value="nain">Nain</option>
+                        <option value="chefNain">Chef Nain</option>
+                        <option value="elfe">Elfe</option>
 
-            <label for="redFighter2">Second Fighter:</label>
-            <select id="redFighter2">
-                <option value="nain">Nain</option>
-                <option value="chefNain">Chef Nain</option>
-                <option value="elfe">Elfe</option>
-                <option value="chefElfe">Chef Elfe</option>
-            </select><br><br>
+                    </select><br><br>
 
-            <label for="redFighter3">Third Fighter:</label>
-            <select id="redFighter3">
-                <option value="nain">Nain</option>
-                <option value="chefNain">Chef Nain</option>
-                <option value="elfe">Elfe</option>
-                <option value="chefElfe">Chef Elfe</option>
-            </select><br><br>
+                    <label for="redFighter2">Second Fighter:</label>
+                    <select id="redFighter2">
+                        <option value="nain">Nain</option>
+                        <option value="chefNain">Chef Nain</option>
+                        <option value="elfe">Elfe</option>
+                        <option value="chefElfe">Chef Elfe</option>
+                    </select><br><br>
 
-            <label for="redFighter4">Fourth Fighter:</label>
-            <select id="redFighter4">
-                <option value="nain">Nain</option>
-                <option value="chefNain">Chef Nain</option>
-                <option value="elfe">Elfe</option>
-                <option value="chefElfe">Chef Elfe</option>
-            </select><br><br>
-        </form>
+                    <label for="redFighter3">Third Fighter:</label>
+                    <select id="redFighter3">
+                        <option value="nain">Nain</option>
+                        <option value="chefNain">Chef Nain</option>
+                        <option value="elfe">Elfe</option>
+                        <option value="chefElfe">Chef Elfe</option>
+                    </select><br><br>
 
+                    <label for="redFighter4">Fourth Fighter:</label>
+                    <select id="redFighter4">
+                        <option value="nain">Nain</option>
+                        <option value="chefNain">Chef Nain</option>
+                        <option value="elfe">Elfe</option>
+                        <option value="chefElfe">Chef Elfe</option>
+                    </select><br><br>
+                </form>
+            </div>
+        </div>
+        <br><br>
+        <button type="button" class="buttonGB" onclick="displayModes(BlueCastle, RedCastle)">Go Back</button>
         <button type="button" onclick="submitTraining(BlueCastle, RedCastle)">Submit</button>
+        
         <br><br>
     `;
 }
+
 
 function submitTraining(BlueCastle, RedCastle) {
     var blueFighter1 = document.getElementById('blueFighter1').value;
@@ -239,21 +260,82 @@ function addWarriorToQueue(type, BlueCastle) {
 
 function displayFileAttente(BlueCastle, RedCastle) {
     var popupContent = document.querySelector('.popup');
-    var content = "<h2>File Attente</h2>";
+    var content = "";
 
-    content += "<h3>BlueCastle</h3><ul>";
-    BlueCastle.fileAttente.forEach(function (warrior) {
-        content += `<li>Type: ${warrior.type}, Force: ${warrior.force}, Points de Vie: ${warrior.pointsDeVie}</li>`;
-    });
-    content += "</ul>";
+    // Adding BlueCastle warriors
+    content += "<div class='castle-warriors'>";
+    content += "<h3>BlueCastle</h3><div class='warriors-container'>";
+   
+    content += BlueCastle.fileAttente.map(function (warrior) {
+        var imgSrc;
+        switch (warrior.type) {
+            case 'nain':
+                imgSrc = "../Assets/Nain.png";
+                break;
+            case 'chef nain':
+                imgSrc = "../Assets/chefNain.png";
+                break;
+            case 'elfe':
+                imgSrc = "../Assets/Elfe.png";
+                break;
+            case 'chef elfe':
+                imgSrc = "../Assets/chefElfe.png";
+                break;
+            default:
+                imgSrc = ""; // Provide a default image or handle it accordingly
+        }
+        return `
+            <div class='warrior'>
+                <img src='${imgSrc}' alt='${warrior.type}' class='warrior-image'>
+                <div class='warrior-info'>
+                    <p>Type: ${warrior.type}</p>
+                    <p>Force: ${warrior.force}</p>
+                    <p>Points de Vie: ${warrior.pointsDeVie}</p>
+                </div>
+            </div>
+        `;
+    }).join('');
+    content += "</div></div>"; // Close the warriors-container and castle-warriors divs
 
-    content += "<h3>RedCastle</h3><ul>";
-    RedCastle.fileAttente.forEach(function (warrior) {
-        content += `<li>Type: ${warrior.type}, Force: ${warrior.force}, Points de Vie: ${warrior.pointsDeVie}</li>`;
-    });
-    content += "</ul>";
+    // Adding RedCastle warriors
+    content += "<div class='castle-warriors'>";
+    content += "<h3>RedCastle</h3><div class='warriors-container'>";
+   
+    content += RedCastle.fileAttente.map(function (warrior) {
+        var imgSrc;
+        switch (warrior.type) {
+            case 'nain':
+                imgSrc = "../Assets/Nain.png";
+                break;
+            case 'chef nain':
+                imgSrc = "../Assets/chefNain.png";
+                break;
+            case 'elfe':
+                imgSrc = "../Assets/Elfe.png";
+                break;
+            case 'chef elfe':
+                imgSrc = "../Assets/chefElfe.png";
+                break;
+            default:
+                imgSrc = ""; // Provide a default image or handle it accordingly
+        }
+        return `
+            <div class='warrior'>
+                <img src='${imgSrc}' alt='${warrior.type}' class='warrior-image'>
+                <div class='warrior-info'>
+                    <p>Type: ${warrior.type}</p>
+                    <p>Force: ${warrior.force}</p>
+                    <p>Points de Vie: ${warrior.pointsDeVie}</p>
+                </div>
+            </div>
+        `;
+    }).join('');
+    content += "</div></div>"; // Close the warriors-container and castle-warriors divs
 
+    // Adding the start fight button
     content += `
+    <br><br>
+        <button class="buttonGB" onclick="modeTrainingPOPUP(BlueCastle, RedCastle)">Go Back</button>
         <button onclick="startFight(BlueCastle, RedCastle)">Start Fight</button>
     `;
 
@@ -266,7 +348,7 @@ async function createPlateau(BlueCastle, RedCastle) {
     plateau.instantiateCarreaux(5);
     await fillPlateau(BlueCastle, plateau);
     await fillPlateauRed(RedCastle, plateau);
-
+    displayCastleWarriors(BlueCastle, RedCastle)
     setTimeout(function () {
         startBattle(plateau);
         
@@ -290,6 +372,8 @@ async function startBattle(plateau) {
         moveGuerriersBleus(plateau);
         moveGuerriersRouges(plateau);
         displayWarriors(plateau);
+        displayCastleWarriors(BlueCastle, RedCastle); // Update display after movements
+
         await delay(3000);
     }
 
@@ -305,6 +389,7 @@ async function startBattle(plateau) {
         console.log(`Round ${tour}`);
         battleRound(battleCarreau, tour, plateau);
         displayWarriors(plateau);
+        displayCastleWarriors(BlueCastle, RedCastle);
         await delay(3000);
 
 
@@ -384,16 +469,16 @@ function displayWarriors(plateau) {
         carreau.guerriersBleu.forEach(warrior => {
             switch (warrior.type) {
                 case 'nain':
-                    content += `<img class="warrior" src="../Assets/Nain.png" alt="nain">`;
+                    content += `<img class="warriorfighting" src="../Assets/Nain.png" alt="nain" style="">`;
                     break;
                 case 'chef nain':
-                    content += `<img class="warrior" src="../Assets/chefNain.png" alt="chef nain">`;
+                    content += `<img class="warriorfighting" src="../Assets/chefNain.png" alt="chef nain" style="">`;
                     break;
                 case 'elfe':
-                    content += `<img class="warrior" src="../Assets/Elfe.png" alt="elfe">`;
+                    content += `<img class="warriorfighting" src="../Assets/Elfe.png" alt="elfe" style="">`;
                     break;
                 case 'chef elfe':
-                    content += `<img class="warrior" src="../Assets/chefElfe.png" alt="chef elfe">`;
+                    content += `<img class="warriorfighting" src="../Assets/chefElfe.png" alt="chef elfe" style="">`;
                     break;
                 default:
                     break;
@@ -403,16 +488,16 @@ function displayWarriors(plateau) {
         carreau.guerriersRouge.forEach(warrior => {
             switch (warrior.type) {
                 case 'nain':
-                    content += `<img class="warrior" src="../Assets/Nain.png" alt="nain">`;
+                    content += `<img class="warriorfighting" src="../Assets/Nain.png" alt="nain" style="">`;
                     break;
                 case 'chef nain':
-                    content += `<img class="warrior" src="../Assets/chefNain.png" alt="chef nain">`;
+                    content += `<img class="warriorfighting" src="../Assets/chefNain.png" alt="chef nain" style="">`;
                     break;
                 case 'elfe':
-                    content += `<img class="warrior" src="../Assets/Elfe.png" alt="elfe">`;
+                    content += `<img class="warriorfighting" src="../Assets/Elfe.png" alt="elfe" style="">`;
                     break;
                 case 'chef elfe':
-                    content += `<img class="warrior" src="../Assets/chefElfe.png" alt="chef elfe">`;
+                    content += `<img class="warriorfighting" src="../Assets/chefElfe.png" alt="chef elfe" style="">`;
                     break;
                 default:
                     break;
@@ -423,7 +508,10 @@ function displayWarriors(plateau) {
     });
 }
 
+
 function moveGuerriersBleus(plateau) {
+    fillPlateau(BlueCastle, plateau)
+    fillPlateauRed(RedCastle, plateau)
     for (let i = plateau.carreaux.length - 1; i > 0; i--) {
         if (plateau.carreaux[i].guerriersBleu.length > 0) {
             const currentCarreau = plateau.carreaux[i];
@@ -437,15 +525,19 @@ function moveGuerriersBleus(plateau) {
             if (previousCarreau.guerriersRouge.length > 0) {
                 battleRound(previousCarreau);
             }
-
+            displayCastleWarriors(BlueCastle, RedCastle);
             console.log(`Moved guerriers bleus from carreau ${i} to carreau ${i - 1}`);
+            if(plateau.carreaux[0].guerriersBleu.length > 0){
+                displayBlueWon()
+            }
             break; // Exit the loop after moving warriors
         }
     }
+   
 }
 
 function moveGuerriersRouges(plateau) {
-
+    
     for (let i = 0; i < plateau.carreaux.length - 1; i++) {
         if (plateau.carreaux[i].guerriersRouge.length > 0) {
             const currentCarreau = plateau.carreaux[i];
@@ -458,16 +550,79 @@ function moveGuerriersRouges(plateau) {
             if (nextCarreau.guerriersBleu.length > 0) {
                 battleRound(nextCarreau);
             }
-
+            displayCastleWarriors(BlueCastle, RedCastle);
             console.log(`Moved guerriers rouges from carreau ${i} to carreau ${i + 1}`);
+            if(plateau.carreaux[4].guerriersRouge.length > 0){
+                displayRedWon()
+            }
             break;
         }
 }
 
    
 }
+function displayRedWon() {
+    showPopup()
+    var popupContent = document.querySelector('.popup');
+    var content = `<h2>Red Warriors Won!</h2>
+                   <button  onclick="retry()">Retry</button>
+                   <button class="buttonGB" style="background-color: red;" onclick="exitGame()">Exit</button>`;
+    popupContent.innerHTML = content;
+}
+
+function displayBlueWon() {
+    showPopup()
+    var popupContent = document.querySelector('.popup');
+    var content = `<h2>Blue Warriors Won!</h2>
+                   <button  onclick="retry()">Retry</button>
+                   <button class="buttonGB" style="background-color: red;" onclick="exitGame()">Exit</button>`;;
+    popupContent.innerHTML = content;
+}
+function retry() {
+    window.location.reload();
+}
 
 
+function displayCastleWarriors(BlueCastle, RedCastle) {
+    // Get the div elements for displaying warriors
+    const blueCastleDiv = document.getElementById('castle-blue');
+    const redCastleDiv = document.getElementById('castle-red');
+
+    // Clear the current content
+    blueCastleDiv.innerHTML = '';
+    redCastleDiv.innerHTML = '';
+
+    // Display BlueCastle warriors
+    let blueContent = '<h3>Blue Castle Warriors</h3>';
+    BlueCastle.guerriers.forEach(warrior => {
+        blueContent += `<div class="warrior-cadre">
+            <p>Type: ${warrior.type}</p>
+            <p>Force: ${warrior.force}</p>
+            <p>Points de Vie: ${warrior.pointsDeVie}</p>
+        </div>`;
+    });
+    blueCastleDiv.innerHTML = blueContent;
+
+    // Display RedCastle warriors
+    let redContent = '<h3>Red Castle Warriors</h3>';
+    RedCastle.guerriers.forEach(warrior => {
+        redContent += `<div class="warrior-cadre">
+            <p>Type: ${warrior.type}</p>
+            <p>Force: ${warrior.force}</p>
+            <p>Points de Vie: ${warrior.pointsDeVie}</p>
+        </div>`;
+    });
+    redCastleDiv.innerHTML = redContent;
+}
+
+function displayRetryExitButtons() {
+    var popupContent = document.querySelector('.popup');
+    var content = `
+        <button  onclick="modeTrainingPOPUP()">Retry</button>
+        <button class="buttonGB" style="background-color: red;" onclick="exitGame()">Exit</button>
+    `;
+    popupContent.innerHTML = content;
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     showPopup();
